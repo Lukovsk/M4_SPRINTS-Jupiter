@@ -28,11 +28,7 @@ int append(int valor, int tamanho, int posição, int* vetor) {
 	return posição;				// posição inalterada
 }
 
-// 4 - Faça uma função que recebe um vetor com 4 posições que contém
-// o valor da distância de um pequeno robô até cada um dos seus 4 lados.
-// A função deve retornar duas informações: A primeira é a direção
-// de maior distância ("Direita", "Esquerda", "Frente", "Tras") e a
-// segunda é esta maior distância.
+// Função que altera o valor da maior distância e retorna o sentido que aponta essa distância
 const char* menorCaminho(int* vetor, int* distância) {
 
 	const char* sentidos[] = { "Direita", "Esquerda", "Frente", "Tras" };
@@ -51,8 +47,7 @@ const char* menorCaminho(int* vetor, int* distância) {
 	return sentidos[sentido];					// retorna o sentido da maior distância
 }
 
-// 5 - Faça uma função que pergunta ao usuário se ele deseja continuar o mapeamento e
-// retorna verdadeiro ou falso
+// Função que verifica se o mapeamento continua ou não
 bool ler() {
 	char continuar;
 
@@ -65,23 +60,8 @@ bool ler() {
 	return true;
 }
 
-// 6 - A função abaixo (que está incompleta) vai "dirigindo" virtualmente um robô
-// e através de 4 sensores em cada um dos 4 pontos do robo ("Direita", "Esquerda",
-// "Frente", "Tras").
-//      A cada passo, ele verifica as distâncias aos objetos e vai mapeando o terreno
-// para uma movimentação futura.
-//      Ele vai armazenando estas distancias em um vetor fornecido como parâmetro
-// e retorna a ultima posicao preenchida do vetor.
-//      Esta função deve ir lendo os 4 sensores até que um comando de pare seja enviado
-//
-//      Para simular os sensores e os comandos de pare, use as funções já construídas
-// nos ítens anteriores e em um looping contínuo até que um pedido de parada seja
-// enviado pelo usuário.
-//
-//      Complete a função com a chamada das funções já criadas
-int dirige(int* v, int maxv) {
-	int maxVetor = maxv;
-	int* vetorMov = v;
+// Função que lê os sensores, muda o vetor global e retorna a quantidade de vezes que o sensor foi lido
+int dirige(int* vetorMov, int maxVetor) {
 	int posAtualVetor = 0;
 	bool dirigindo = true;
 
@@ -97,9 +77,7 @@ int dirige(int* v, int maxv) {
 	return posAtualVetor;
 }
 
-// O trecho abaixo irá utilizar as funções acima para ler os sensores e o movimento
-// do robô e no final percorrer o vetor e mostrar o movimento a cada direção baseado 
-// na maior distância a cada movimento
+// função que "anda o robo", verificando o tamanho percorrido para ver quantas vezes os sensores leram e retornando o quanto ele andou em cada iteração
 void percorre(int* v, int tamPercorrido) {
 	int* vetorMov = v;
 	int maiorDir = 0;
