@@ -1,10 +1,10 @@
-#define LED_1 36  // yellow LED
-#define LED_2 40  // white LED
-#define LED_3 2   // red LED
+#define LED_1 48  // yellow LED
+#define LED_2 36  // white LED
+#define LED_3 40  // red LED
 #define LED_4 1   // green LED
 #define LED_control 9
 #define LDR_Reader 4    // leitor LDR
-#define SPEAKER_PIN 38  // buzzer
+#define SPEAKER_PIN 11  // buzzer
 #define SAVE_BUTTON 5   // botão de guardar
 #define PLAY_BUTTON 7   // botão de tocar
 
@@ -20,8 +20,8 @@ int musicVector[100];  // vetor com os valores relativos para tocar a música
 int counter = 0;       // contador que garante não sobrescrever a nota atual
 
 // LDR Control variables
-const float maxLux = 10000;
-const float minLux = 100;
+const float maxLux = 8126;
+const float minLux = 64;
 
 // LDR Characteristics
 const float GAMMA = 0.7;
@@ -38,8 +38,10 @@ void setup() {
 }
 
 // função que calcula a luminosidade baseado nas saídas analógicas
-float calculateLux() {
+int calculateLux() {
   int analogValue = analogRead(LDR_Reader);
+  Serial.print("Leitor: ");
+  Serial.println(analogValue);
   float voltage = analogValue / 1024. * 5;
   float resistance = 2000 * voltage / (1 - voltage / 5);
 
@@ -128,6 +130,9 @@ void loop() {
   relLux = relativeLux(lux);          // transformação dessa luminosidade para um valor entre 0 e 15
   binaryForm = binaryReturn(relLux);  // forma binária do valor relativo
 
+  Serial.print("Conversão: ");
+  Serial.println(lux);
+
   // agora tocamos a música e ligamos os leds baseado na luminosidade lida atualmente
   pseudoSplit(ledsVector, binaryForm);       // primeiro definimos quais leds serão ativados (isso é feito direto no vetor de leds)
   tone(SPEAKER_PIN, relLux * 70, time * 3);  // depois tocamos a música por 1.5 segundos
@@ -136,26 +141,26 @@ void loop() {
 
   // confirmação dos botões
   digitalWrite(LED_control, HIGH);  // depois de 1.5 segundos, o led azul acende para sinalizar que um botão pode ser apertado
-  lightsOff();                       // e os outros leds são desligados
-  delay(time);                        // isso dura 0.5 segundos
+  lightsOff();                      // e os outros leds são desligados
+  delay(time);                      // isso dura 0.5 segundos
   digitalWrite(LED_control, LOW);   // o led azul desliga e os botões são verificados
 
   // verificação dos botões
   // Save Button: salva a luminosidade relativa atual e armazena seu valor no vetor musical
   if (digitalRead(SAVE_BUTTON) == 0) {
-    delay(time);                        // espera 0.5 segundos
+    delay(time);                      // espera 0.5 segundos
     digitalWrite(LED_control, HIGH);  // liga o led azul pra mostrar que está "trabalhando nisso"
-    musicVector[counter] = relLux;     // armazena a luminosidade relativa
-    counter += 1;                      // aumenta o contador para a próxima vez armazenar no espaço seguinte
+    musicVector[counter] = relLux;    // armazena a luminosidade relativa
+    counter += 1;                     // aumenta o contador para a próxima vez armazenar no espaço seguinte
 
     // finalização da operação
-    digitalWrite(LED_control, LOW);     // desliga o led azul para dizer que a operação de armazenamento acabou
+    digitalWrite(LED_control, LOW);      // desliga o led azul para dizer que a operação de armazenamento acabou
     logPrints(lux, relLux, binaryForm);  // printa a a forma da música atual
   }
 
   // Play Button: para o loop para tocar a música criada com os valores armazenados e reinicia o vetor e o contador
   if (digitalRead(PLAY_BUTTON) == 0) {
-    delay(time/2);  // espera de segurança
+    delay(time / 2);  // espera de segurança
     for (int thisNote = 0; musicVector[thisNote] != 0; thisNote++) {
       digitalWrite(LED_control, HIGH);  // liga o led azul para tocar uma nota
       // prints para ajudar a visualização
@@ -169,9 +174,9 @@ void loop() {
       lightsOff();
       delay(time);
       // depois da musica acabar
-      musicVector[thisNote] = 0;        // apaga o valor atual armazenado
+      musicVector[thisNote] = 0;       // apaga o valor atual armazenado
       digitalWrite(LED_control, LOW);  // desliga o led azul
-      delay(time * 2);                  // espera 1 segundo para a próxima nota
+      delay(time * 2);                 // espera 1 segundo para a próxima nota
     }
     // depois de todas as notas, reseta o contador
     counter = 0;
