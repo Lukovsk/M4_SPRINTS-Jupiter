@@ -1,12 +1,12 @@
 #include "WiFi.h"
 #include "ESPAsyncWebServer.h"
-#include "Wire.h"
-#include "LiquidCrystal_I2C.h"
-LiquidCrystal_I2C lcd();
+// #include "Wire.h"
+// #include "LiquidCrystal_I2C.h"
+// LiquidCrystal_I2C lcd;
 using namespace std;
 
-const char *ssid = "Satan";
-const char *password = "1234567810";
+const char *ssid = "Inteli-COLLEGE";
+const char *password = "QazWsx@123";
 
 // pinos
 #define player1L 15 // LED vermelho (player 1)
@@ -70,8 +70,8 @@ void setup()
 {
     Serial.begin(9600); // inicia o serial
 
-    Wire.begin(47, 48); // 47-> LCA, 48 -> LCL
-    lcd.begin(16, 2);
+    // Wire.begin(47, 48); // 47-> LCA, 48 -> LCL
+    // lcd.begin(16, 2);
     // lcd.setCursor(0, 0); // coluna, linha (linha de cima)
     // lcd.print("Tempo: ");
     // lcd.setCursor(0, 1); // linha de baixo
